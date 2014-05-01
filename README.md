@@ -33,8 +33,7 @@ Usage
 License
 ------------
 
-Uses the `MIT`_ license.
+Uses the `MIT` license.
 
-
-.. _Django Debug Toolbar: https://github.com/django-debug-toolbar/django-debug-toolbar
-.. _MIT: http://opensource.org/licenses/MIT
+* Django Debug Toolbar: https://github.com/django-debug-toolbar/django-debug-toolbar
+* MIT: http://opensource.org/licenses/MIT
