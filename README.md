@@ -20,7 +20,7 @@ Installation
 
 Install using ``pip``::
 
-    pip install elasticsearch-django-debug-toolbar
+    pip install django-elasticsearch-debug-toolbar
 
 or install the development version from source::
 
