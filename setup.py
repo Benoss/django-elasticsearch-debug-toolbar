@@ -6,7 +6,7 @@ setup(
     description='A Django Debug Toolbar panel for Elasticsearch',
     author='Benoit Chabord',
     author_email='benauf@gmail.com',
-    url='http://github.com/Benoss/elasticsearch-django-debug-toolbar',
+    url='http://github.com/Benoss/django-elasticsearch-debug-toolbar',
     license='MIT',
     packages=find_packages(),
     platforms=['Any'],
