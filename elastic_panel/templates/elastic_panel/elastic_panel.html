@@ -12,19 +12,23 @@
         <dd>
             <div class="djTemplateShowContextDiv">
                 <a class="elasticShowTemplate">
-                <span class="toggleArrow">▶</span> Show Json Body</a>
+                    <span class="toggleArrow">▶</span> Show Json Body
+                </a>
+                <a class="selectText" style="display: none;"> -&gt; (Select All Json for ctrl + c)</a>
             </div>
             <div class="djTemplateHideContextDiv" style="display: none;">
-                <code>{{record.body}}</code>
+                <code class="json_code" contenteditable="true" >{{record.body}}</code>
             </div>
         </dd>
         <dd>
             <div class="djTemplateShowContextDiv">
                 <a class="elasticShowTemplate">
-                <span class="toggleArrow">▶</span> Show Json Response</a>
+                    <span class="toggleArrow">▶</span> Show Json Response
+                </a>
+                <a class="selectText" style="display: none;"> -&gt; (Select All Json for ctrl + c)</a>
             </div>
             <div class="djTemplateHideContextDiv" style="display: none;">
-                <code>{{record.response}}</code>
+                <code class="json_code" contenteditable="true" >{{record.response}}</code>
             </div>
         </dd>
         </dt>
@@ -47,10 +51,20 @@
             darr = String.fromCharCode(0x25bc);
 
         $('a.elasticShowTemplate').on('click', function() {
+            $(this).next().toggle();
             var arrow = $(this).children('.toggleArrow');
             arrow.html(arrow.html() == uarr ? darr : uarr);
-            $(this).parent().next().toggle();
+            textarea = $(this).parent().next();
+            textarea.toggle();
             return false;
+        });
+
+        $('.selectText').on('click', function() {
+            $(this).parent().next().find('code').focus();
+        });
+
+        $('code.json_code').on('focus', function() {
+            document.execCommand('selectAll', false, null);
         });
     })(djdt.jQuery);
 </script>
