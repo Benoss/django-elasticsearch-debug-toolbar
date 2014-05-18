@@ -7,7 +7,7 @@ About
 ------------
 
 This is a panel for `Django Debug Toolbar` 1.2+ that displays query results from
-ElasticSearch queries using elasticsearch pyhon [elasticsearch pyhon](https://github.com/elasticsearch/elasticsearch-py) official client.
+ElasticSearch queries using [elasticsearch python](https://github.com/elasticsearch/elasticsearch-py) official client.
 
 You are more than welcome to participate
 * Any idea and no time to code send your idea here: https://github.com/Benoss/django-elasticsearch-debug-toolbar/issues
@@ -32,7 +32,8 @@ or install the development version from source::
 Usage
 ------------
 
-Just click the link in the Django Debug toolbar
+Just click the link in the Django Debug toolbar:
+
 ![elastic queries image](https://raw.github.com/Benoss/django-elasticsearch-debug-toolbar/master/doc/elastic_queries.png)
 
 License
