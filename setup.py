@@ -1,25 +1,19 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from distutils.core import setup
 
 setup(
-    name='django-elasticsearch-debug-toolbar',
-    version='0.1.15',
-    description='A Django Debug Toolbar panel for Elasticsearch',
+  name = 'django-elasticsearch-debug-toolbar',
+  packages=find_packages(),
+  version = '1.0.2',
+  description='A Django Debug Toolbar panel for Elasticsearch',
     long_description=open('README.md').read(),
     author='Benoit Chabord',
     author_email='benauf@gmail.com',
     url='http://github.com/Benoss/django-elasticsearch-debug-toolbar',
     license='MIT',
-    packages=find_packages(),
-    platforms=['Any'],
-    provides=['elastic_toolbar'],
-    install_requires=[
-        'elasticsearch>=1.0',
-        'django-debug-toolbar>=1.2',
-    ],
+    keywords = ['django', 'es', 'elastic', 'elasticsearch'],
     include_package_data=True,
-    zip_safe=False,
     classifiers=[
-        'Development Status :: 4 - Beta',
         'Framework :: Django',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',

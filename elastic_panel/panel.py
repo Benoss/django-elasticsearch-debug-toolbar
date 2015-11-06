@@ -3,6 +3,7 @@ from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from debug_toolbar.panels import Panel
 from debug_toolbar.utils import ThreadCollector
+import hashlib
 import json
 
 from elasticsearch.connection.base import Connection
@@ -33,6 +34,7 @@ class ElasticQueryInfo():
         self.status_code = status_code
         self.response = _pretty_json(response)
         self.duration = round(duration * 1000, 2)
+        self.hash = hashlib.md5(self.full_url + self.body).hexdigest()
 
 
 class ElasticDebugPanel(Panel):
@@ -43,11 +45,15 @@ class ElasticDebugPanel(Panel):
     template = 'elastic_panel/elastic_panel.html'
     has_content = True
 
+
     def nav_title(self):
         return _('Elastic Queries')
 
     def nav_subtitle(self):
-        return "{} queries {}ms".format(self.nb_queries, self.total_time)
+        default_str = "{} queries {}ms".format(self.nb_queries, self.total_time)
+        if self.nb_duplicates > 0:
+            default_str += " {} DUPE".format(self.nb_duplicates)
+        return default_str
 
     def url(self):
         return ''
@@ -61,9 +67,14 @@ class ElasticDebugPanel(Panel):
     def process_response(self, request, response):
         records = collector.get_collection()
         self.total_time = 0
+        self.nb_duplicates = 0
 
+        hashs = set()
         for record in records:
             self.total_time += record.duration
+            if record.hash in hashs:
+                self.nb_duplicates += 1
+            hashs.add(record.hash)
 
         self.nb_queries = len(records)
 
