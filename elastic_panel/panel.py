@@ -11,11 +11,13 @@ from elasticsearch.connection.base import Connection
 old_log_request_success = Connection.log_request_success
 collector = ThreadCollector()
 
+
 def patched_log_request_success(self, method, full_url, path, body, status_code, response, duration):
     collector.collect(ElasticQueryInfo(method, full_url, path, body, status_code, response, duration))
     old_log_request_success(self, method, full_url, path, body, status_code, response, duration)
 
 Connection.log_request_success = patched_log_request_success
+
 
 def _pretty_json(data):
     # pretty JSON in tracer curl logs
@@ -25,8 +27,11 @@ def _pretty_json(data):
         # non-json data or a bulk request
         return data
 
+
 class ElasticQueryInfo():
     def __init__(self, method, full_url, path, body, status_code, response, duration):
+        if not body:
+            body = b''  # Python 3 TypeError if None
         self.method = method
         self.full_url = full_url
         self.path = path
@@ -34,7 +39,7 @@ class ElasticQueryInfo():
         self.status_code = status_code
         self.response = _pretty_json(response)
         self.duration = round(duration * 1000, 2)
-        self.hash = hashlib.md5(self.full_url + self.body).hexdigest()
+        self.hash = hashlib.md5(self.full_url.encode('ascii', 'ignore') + self.body).hexdigest()
 
 
 class ElasticDebugPanel(Panel):
@@ -44,7 +49,6 @@ class ElasticDebugPanel(Panel):
     name = 'Elasticsearch'
     template = 'elastic_panel/elastic_panel.html'
     has_content = True
-
 
     def nav_title(self):
         return _('Elastic Queries')
