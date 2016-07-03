@@ -28,7 +28,7 @@ def _pretty_json(data):
         return data
 
 
-class ElasticQueryInfo():
+class ElasticQueryInfo:
     def __init__(self, method, full_url, path, body, status_code, response, duration):
         if not body:
             body = b''  # Python 3 TypeError if None

@@ -1,26 +1,27 @@
 language: python
 python:
-  - 2.7
-  - 3.5
-  - 3.4
-  - pypy
+- 2.7
+- 3.5
+- 3.4
+- pypy
 cache:
   directories:
-  - .cache/pip/
-  - $HOME/.cache/pip
+  - ".cache/pip/"
+  - "$HOME/.cache/pip"
   - docs/node_modules/
-  - $HOME/docs/node_modules
-install:
+  - "$HOME/docs/node_modules"
+install: "pip install -r elastic_panel/test/requirements.txt"
 script: python setup.py test
 sudo: false
 deploy:
-  - provider: pypi
-    server: https://pypi.python.org/pypi
-    user: benos
-    password:
-      secure: CpBCTrohNFQM2GYD/e6u243GHoz6e/CYMDc/l90DJTvRMXuNo0gJFIV4vZ+H6qoQ+i5XiYmAwc+G6jtsHljRrEX7CJNEySPx79FJntxtFeuotnaI5wlgXssQvsoSMRS1QKHjHLwmMkZsyV/MLoId5UpK0mjeJscVSAAhgTSORDbnDUG7JGr4Sfs7GQevZtEQGH8Cp+DGOfnUUuOw9g64xcqYTqOxZwzeQ/pE4mKVkUqXJ1uoNKPa2TlozMmEiJoSKrFsH8ebENA5vc4OegPHbFrXMfqPTgp314RJvtLTbFseAX72D74Hf4yXFM2BLG6CydH/pQIzy5iBxpjDMgIp/Fr+Jq1UfOu+t+FjCv6xGijm1rNMTJisgodqqPj7iv0NnsL9MLZcaqHDZWnLzIhihmg74Tw1qUoIG/Dn+Jj8hxinL8NyZHCCLqvvVB/LY30KEN7iUNF851dVATRJLa4PU/tbaDlNOkk/O7g8jU/7jtXHt48A9S24NVLyYEvaMLeqTXoInbts9aN6KcPzk341Hq3rUoAHllTS8frCHmi8H6PkNM4Pp8YHtB95hdxwSxmNcK2nw3scii+Vtz85jrbnsxtLhz2k07rx7kP7FQ+tdPKYLMt1VZPIc4LaAo2HZzd1xzwxegmD3dIiut39YgvdeQurOt0PWhjxA2eqAWjfy5Y=
-    on:
-      tags: true
-      branch: master
-      distributions: sdist bdist_wheel
-      condition: $TRAVIS_PYTHON_VERSION = "2.7"
+  provider: pypi
+  server: https://pypi.python.org/pypi
+  user: benos
+  password:
+    secure: DDlJABA1h0Y3D1d9X21CQJ75o9w0Od9jY5gfCLH6zfJFyd9CVIql6+7Emn6mVETskKQKoDBY41Jqa+vlzacYnq6rx/0W3n7A45AWFZ1Z5MWz4lpxRDiPkIH94jp4bsXCAkl8+8f+X1xeIlOVpR9siXicMy3VFdiTL/z2YgW3l4Y=
+  on:
+    tags: true
+    branch: master
+    distributions: sdist bdist_wheel
+    repo: Benoss/django-elasticsearch-debug-toolbar
+    condition: $TRAVIS_PYTHON_VERSION = "2.7"
