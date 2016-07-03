@@ -10,7 +10,7 @@ cache:
   - "$HOME/.cache/pip"
   - docs/node_modules/
   - "$HOME/docs/node_modules"
-install: "pip install -r elastic_panel/test/requirements.txt"
+install: "pip install -r elastic_panel/test/requirement.txt"
 script: python setup.py test
 sudo: false
 deploy:
