@@ -2,6 +2,7 @@ Django Elasticsearch Toolbar
 ============================
 
 A Django Debug Toolbar panel for Elasticsearch
+[![Build Status](https://travis-ci.org/Benoss/django-elasticsearch-debug-toolbar.svg?branch=master)](https://travis-ci.org/Benoss/django-elasticsearch-debug-toolbar)
 
 About
 ------------
