@@ -42,7 +42,7 @@ class ElasticQueryInfo:
         self.status_code = status_code
         self.response = _pretty_json(response)
         self.duration = round(duration * 1000, 2)
-        self.hash = hashlib.md5("{}{}".format(self.full_url.encode('ascii', 'ignore'), self.body.encode('ascii', 'ignore'))).hexdigest()
+        self.hash = hashlib.md5(self.full_url.encode('ascii', 'ignore') + self.body.encode('ascii', 'ignore')).hexdigest()
 
 class ElasticDebugPanel(Panel):
     """
