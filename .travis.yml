@@ -9,15 +9,17 @@ python:
 - 3.5
 - 3.4
 - pypy
+
 cache:
   directories:
   - ".cache/pip/"
   - "$HOME/.cache/pip"
   - docs/node_modules/
   - "$HOME/docs/node_modules"
+
 install: "pip install -r elastic_panel/test/requirement.txt"
 script: python setup.py test
-sudo: false
+
 deploy:
   provider: pypi
   server: https://pypi.python.org/pypi
