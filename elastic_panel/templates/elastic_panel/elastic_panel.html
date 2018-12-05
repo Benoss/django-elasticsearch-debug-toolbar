@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static %}
 
 {#<h4>{% trans 'Queries' %}</h4>#}
 {% if records %}
@@ -45,26 +46,4 @@
     {% endif %}
 {% endif %}
 
-<script>
-    (function ($) {
-        var uarr = String.fromCharCode(0x25b6),
-            darr = String.fromCharCode(0x25bc);
-
-        $('a.elasticShowTemplate').on('click', function() {
-            $(this).next().toggle();
-            var arrow = $(this).children('.toggleArrow');
-            arrow.html(arrow.html() == uarr ? darr : uarr);
-            textarea = $(this).parent().next();
-            textarea.toggle();
-            return false;
-        });
-
-        $('.selectText').on('click', function() {
-            $(this).parent().next().find('code').focus();
-        });
-
-        $('code.json_code').on('focus', function() {
-            document.execCommand('selectAll', false, null);
-        });
-    })(djdt.jQuery);
-</script>
+<script src="{% static 'elastic_panel/js/elastic_panel.js' %}"></script>
