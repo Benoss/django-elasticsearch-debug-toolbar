@@ -20,13 +20,13 @@ script: python setup.py test
 
 deploy:
   provider: pypi
-  server: https://pypi.python.org/pypi
+  #server: https://pypi.python.org/pypi
   user: benos
   password:
     secure: DDlJABA1h0Y3D1d9X21CQJ75o9w0Od9jY5gfCLH6zfJFyd9CVIql6+7Emn6mVETskKQKoDBY41Jqa+vlzacYnq6rx/0W3n7A45AWFZ1Z5MWz4lpxRDiPkIH94jp4bsXCAkl8+8f+X1xeIlOVpR9siXicMy3VFdiTL/z2YgW3l4Y=
   on:
     tags: true
     branch: master
-    distributions: sdist bdist_wheel
+    #distributions: sdist bdist_wheel
     repo: Benoss/django-elasticsearch-debug-toolbar
     condition: $TRAVIS_PYTHON_VERSION = "2.7"
