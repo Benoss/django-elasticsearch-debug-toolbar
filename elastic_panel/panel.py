@@ -69,8 +69,9 @@ class ElasticDebugPanel(Panel):
 
     def process_request(self, request):
         collector.clear_collection()
+        return super().process_request(request)
 
-    def process_response(self, request, response):
+    def generate_stats(self, request, response):
         records = collector.get_collection()
         self.total_time = 0
         self.nb_duplicates = 0

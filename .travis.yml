@@ -3,7 +3,6 @@ dist: xenial
 sudo: true
 
 python:
-- 2.7
 - 3.7
 - 3.6
 - 3.5
@@ -29,4 +28,4 @@ deploy:
     branch: master
     #distributions: sdist bdist_wheel
     repo: Benoss/django-elasticsearch-debug-toolbar
-    condition: $TRAVIS_PYTHON_VERSION = "2.7"
+    condition: $TRAVIS_PYTHON_VERSION = "3.7"

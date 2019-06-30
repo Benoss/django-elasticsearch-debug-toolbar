@@ -23,5 +23,6 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
     ],
+    tests_require=['nose', 'django-debug-toolbar', 'elasticsearch'],
     test_suite='nose.collector',
 )
