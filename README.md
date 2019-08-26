@@ -8,8 +8,10 @@ A Django Debug Toolbar panel for Elasticsearch
 About
 ------------
 
-Breaking change django-elasticsearch-debug-toolbar 2.x is compatible with Django Debug Toolbar 2.x
-django-elasticsearch-debug-toolbar 1.x is compatible with Django Debug Toolbar 1.x
+Breaking changes: 
+* django-elasticsearch-debug-toolbar 2.x is compatible with Django Debug Toolbar 2.x
+* django-elasticsearch-debug-toolbar 1.x is compatible with Django Debug Toolbar 1.x
+
 ElasticSearch queries using [elasticsearch python](https://github.com/elasticsearch/elasticsearch-py) official client.
 
 You are more than welcome to participate
