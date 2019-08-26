@@ -1,3 +1,6 @@
+2.0.0
+* Remove python 2.x
+* Compatible with Debug toolbar 2.x
 
 1.0.0
 Added duplicate detection and query hash
