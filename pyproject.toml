@@ -1,0 +1,28 @@
+[tool.black]
+line-length = 120
+target-version=["py37", ]
+include = '\.pyi?$'
+# see help text for default exclude
+exclude = '''/(
+    # black defaults from --help (see also https://github.com/ambv/black#configuration-format )
+      \.git
+    | \.hg
+    | \.mypy_cache
+    | \.nox
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+
+    # common exclusions
+    | node_modules
+
+    # django specific exclusions
+
+    | migrations
+
+    # project specific exclusions
+)/
+'''
