@@ -7,7 +7,7 @@ import hashlib
 import json
 
 from elasticsearch.connection.base import Connection
-#Patching og the orginal elasticsearch log_request
+# Patching og the orginal elasticsearch log_request
 old_log_request_success = Connection.log_request_success
 collector = ThreadCollector()
 
@@ -15,6 +15,7 @@ collector = ThreadCollector()
 def patched_log_request_success(self, method, full_url, path, body, status_code, response, duration):
     collector.collect(ElasticQueryInfo(method, full_url, path, body, status_code, response, duration))
     old_log_request_success(self, method, full_url, path, body, status_code, response, duration)
+
 
 Connection.log_request_success = patched_log_request_success
 
@@ -44,6 +45,7 @@ class ElasticQueryInfo:
         self.duration = round(duration * 1000, 2)
         self.hash = hashlib.md5(self.full_url.encode('ascii', 'ignore') + self.body.encode('ascii', 'ignore')).hexdigest()
 
+
 class ElasticDebugPanel(Panel):
     """
     Panel that displays queries made by Elasticsearch backends.
@@ -51,6 +53,9 @@ class ElasticDebugPanel(Panel):
     name = 'Elasticsearch'
     template = 'elastic_panel/elastic_panel.html'
     has_content = True
+    total_time = 0
+    nb_duplicates = 0
+    nb_queries = 0
 
     def nav_title(self):
         return _('Elastic Queries')
