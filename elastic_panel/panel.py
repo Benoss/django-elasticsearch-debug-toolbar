@@ -2,7 +2,8 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from debug_toolbar.panels import Panel
-from debug_toolbar.utils import ThreadCollector
+from debug_toolbar.utils import ThreadCollector, get_stack, tidy_stacktrace, render_stacktrace, \
+    get_module_path, hidden_paths
 import hashlib
 import json
 
@@ -30,6 +31,9 @@ def _pretty_json(data):
         return data
 
 
+hidden_paths.append(get_module_path(__name__))
+
+
 class ElasticQueryInfo:
     def __init__(self, method, full_url, path, body, status_code, response, duration):
         if not body:
@@ -47,6 +51,7 @@ class ElasticQueryInfo:
         self.hash = hashlib.md5(
             self.full_url.encode("ascii", "ignore") + self.body.encode("ascii", "ignore")
         ).hexdigest()
+        self.stacktrace = tidy_stacktrace(reversed(get_stack()))
 
 
 class ElasticDebugPanel(Panel):
@@ -91,6 +96,7 @@ class ElasticDebugPanel(Panel):
             if record.hash in hashs:
                 self.nb_duplicates += 1
             hashs.add(record.hash)
+            record.stacktrace = render_stacktrace(record.stacktrace)
 
         self.nb_queries = len(records)
 

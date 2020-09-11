@@ -32,7 +32,18 @@
                 <code class="json_code" contenteditable="true" >{{record.response}}</code>
             </div>
         </dd>
-        </dt>
+        <dd>
+            <div class="djTemplateShowContextDiv">
+                <a class="elasticShowTemplate">
+                    <span class="toggleArrow">▶</span> Show Stacktrace
+                </a>
+            </div>
+            <div class="djTemplateHideContextDiv" style="display: none;">
+                <pre class="djdt-stack">
+                    {{record.stacktrace}}
+                </pre>
+            </div>
+        </dd>
     {% endfor %}
     </dl>
 {% else %}
