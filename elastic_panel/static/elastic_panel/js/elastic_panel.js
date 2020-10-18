@@ -14,7 +14,7 @@ var showHandler = function(e) {
 
     toggle(this.nextElementSibling)
 
-    arrow = document.querySelector('a.elasticShowTemplate .toggleArrow')
+    var arrow = document.querySelector('a.elasticShowTemplate .toggleArrow')
     arrow.textContent = arrow.textContent == uarr ? darr : uarr
 
     toggle(this.parentNode.nextElementSibling)
@@ -27,8 +27,8 @@ for (var e of document.querySelectorAll('a.elasticShowTemplate')) {
 }
 
 var textHandler = function(e) {
-    selection = window.getSelection();
-    range = document.createRange();
+    var selection = window.getSelection();
+    var range = document.createRange();
     range.selectNodeContents(this.parentNode.nextElementSibling.querySelector('code'));
     selection.removeAllRanges();
     selection.addRange(range);
