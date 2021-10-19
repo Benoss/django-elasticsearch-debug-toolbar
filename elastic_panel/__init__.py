@@ -9,13 +9,12 @@ elastic_panel
 
 """
 
-import pkg_resources
+import importlib.metadata as ilm
 
 try:
-    __version__ = pkg_resources.get_distribution("django-elasticsearch-debug-toolbar").version
-except Exception:
+    __version__ = ilm.version('django-elasticsearch-debug-toolbar')
+except ilm.PackageNotFoundError:
     __version__ = "unknown"
-
 
 __title__ = "elastic_panel"
 __author__ = "Benoit Chabord"
