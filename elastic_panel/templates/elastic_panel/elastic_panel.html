@@ -32,6 +32,17 @@
                 <code class="json_code" contenteditable="true" >{{record.response}}</code>
             </div>
         </dd>
+        <dd>
+            <div class="djTemplateShowContextDiv">
+                <a class="elasticShowTemplate">
+                    <span class="toggleArrow">▶</span> Show Traceback
+                </a>
+                <a class="selectText" style="display: none;"> -&gt; (Select All Json for ctrl + c)</a>
+            </div>
+            <div class="djTemplateHideContextDiv" style="display: none;">
+                <code class="json_code" contenteditable="true" >{{record.traceback}}</code>
+            </div>
+        </dd>
         </dt>
     {% endfor %}
     </dl>

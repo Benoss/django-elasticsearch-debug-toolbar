@@ -1,3 +1,6 @@
+import traceback
+from django.conf import settings
+from django.template.loader import render_to_string
 from django.templatetags.static import static
 from django.utils.translation import ugettext_lazy as _
 from debug_toolbar.panels import Panel
@@ -37,6 +40,7 @@ class ElasticQueryInfo:
             self.body = _pretty_json(body)
             if isinstance(self.body, bytes):
                 self.body = self.body.decode("ascii", "ignore")
+        self.traceback = "".join(traceback.format_stack()[:-2])
         self.method = method
         self.full_url = full_url
         self.path = path
