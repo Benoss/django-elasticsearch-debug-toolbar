@@ -1,3 +1,6 @@
+3.0.2
+* Just CI auto deploy fixes
+
 3.0.0
 * Compatible with Debug toolbar 3.x
 * Compatible with Django 4.0 (Requires python 3.8+)
