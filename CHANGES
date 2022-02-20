@@ -1,7 +1,7 @@
 3.0.0
 * Compatible with Debug toolbar 3.x
-* Compatible with Django 4.0
-* Remove python 3.6
+* Compatible with Django 4.0 (Requires python 3.8+)
+* Remove python 3.6 and 3.7
 * Add Python 3.8 3.9 3.10
 * Remove travis switch to github actions
 
