@@ -3,22 +3,51 @@ name: Publish Python 🐍 distributions 📦 to PyPI and TestPyPI
 on: push
 
 jobs:
-  build-n-publish:
-    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
-    runs-on: ubuntu-20.04
-
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - django-version: "2.2.0"
+            python-version: "3.7"
+          - django-version: "3.2.0"
+            python-version: "3.7"
+          - django-version: "4.0.0"
+            python-version: "3.7"
+          - django-version: "2.2.0"
+            python-version: "3.10"
+          - django-version: "3.2.0"
+            python-version: "3.10"
+          - django-version: "4.0.0"
+            python-version: "3.10"
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.9
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9
+        python-version: ${{ matrix.python-version }}
+
+    - name: Upgrade pip version
+      run: |
+        python -m pip install -U pip
+    - name: Upgrade django version
+      run: |
+        python -m pip install "Django~=${{ matrix.django-version }}"
 
     - name: Install test requirements/linters
       run: pip install -r elastic_panel/test/requirements.txt
     - name: Run pre-commit
       run: pre-commit run --all-files
 
+
+  build-n-publish:
+    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
     - name: Install pypa/build
       run: >-
         python -m

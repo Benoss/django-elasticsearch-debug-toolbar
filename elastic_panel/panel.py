@@ -5,7 +5,7 @@ import traceback
 from debug_toolbar.panels import Panel
 from debug_toolbar.utils import ThreadCollector
 from django.templatetags.static import static
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from elasticsearch.connection.base import Connection
 
 # Patching og the orginal elasticsearch log_request

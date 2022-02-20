@@ -1,5 +1,5 @@
 django-debug-toolbar>=3.0
-elasticsearch
+elasticsearch<8.0.0
 
 pytest
 isort

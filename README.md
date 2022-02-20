@@ -9,7 +9,7 @@ About
 ------------
 
 Breaking changes:
-* django-elasticsearch-debug-toolbar 3.x is compatible with Django Debug Toolbar 3.x
+* django-elasticsearch-debug-toolbar 3.x is compatible with Django Debug Toolbar 3.x (elasticsearch <8.0.0)
 * django-elasticsearch-debug-toolbar 2.x is compatible with Django Debug Toolbar 2.x
 * django-elasticsearch-debug-toolbar 1.x is compatible with Django Debug Toolbar 1.x
 
