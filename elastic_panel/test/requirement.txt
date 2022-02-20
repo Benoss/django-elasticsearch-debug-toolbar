@@ -1,3 +1,11 @@
 django-debug-toolbar>=2.0
 elasticsearch
-nose
+
+pytest
+isort
+flake8
+flake8-print  # Forbid print statement in code use logging. instead
+flake8-bugbear  # Catch common errors
+flake8-printf-formatting  #
+black>=21.12b0
+pre-commit

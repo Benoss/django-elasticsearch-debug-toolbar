@@ -1,10 +1,11 @@
-from setuptools import find_packages
 from distutils.core import setup
+
+from setuptools import find_packages
 
 setup(
     name="django-elasticsearch-debug-toolbar",
     packages=find_packages(),
-    version="2.0.0",
+    version="3.0.0",
     description="A Django Debug Toolbar panel for Elasticsearch",
     long_description=open("README.md").read(),
     author="Benoit Chabord",
@@ -20,7 +21,10 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
-    tests_require=["nose", "django-debug-toolbar", "elasticsearch"],
-    test_suite="nose.collector",
+    tests_require=["pytest", "django-debug-toolbar", "elasticsearch"],
+    test_suite="pytest.collector",
 )

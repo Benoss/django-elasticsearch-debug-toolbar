@@ -41,6 +41,7 @@ coverage.xml
 .mr.developer.cfg
 .project
 .pydevproject
+.pytest_cache
 
 # Rope
 .ropeproject

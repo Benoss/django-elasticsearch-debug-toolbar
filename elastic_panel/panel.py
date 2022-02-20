@@ -1,13 +1,11 @@
-import traceback
-from django.conf import settings
-from django.template.loader import render_to_string
-from django.templatetags.static import static
-from django.utils.translation import ugettext_lazy as _
-from debug_toolbar.panels import Panel
-from debug_toolbar.utils import ThreadCollector
 import hashlib
 import json
+import traceback
 
+from debug_toolbar.panels import Panel
+from debug_toolbar.utils import ThreadCollector
+from django.templatetags.static import static
+from django.utils.translation import ugettext_lazy as _
 from elasticsearch.connection.base import Connection
 
 # Patching og the orginal elasticsearch log_request

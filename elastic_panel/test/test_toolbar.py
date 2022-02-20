@@ -1,15 +1,15 @@
-# -*- coding: utf-8 -*-
 import unittest
 
 from django.conf import settings
 
 settings.configure()
 
-from debug_toolbar.toolbar import DebugToolbar
-from django.http import HttpResponse
-from django.test import RequestFactory
-from elasticsearch.connection import Connection
-from elastic_panel import panel
+from debug_toolbar.toolbar import DebugToolbar  # noqa: E402
+from django.http import HttpResponse  # noqa: E402
+from django.test import RequestFactory  # noqa: E402
+from elasticsearch.connection import Connection  # noqa: E402
+
+from elastic_panel import panel  # noqa: E402
 
 
 class ImportTest(unittest.TestCase):
