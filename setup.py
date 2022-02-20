@@ -5,7 +5,7 @@ from setuptools import find_packages
 setup(
     name="django-elasticsearch-debug-toolbar",
     packages=find_packages(),
-    version="3.0.0",
+    version="3.0.1",
     description="A Django Debug Toolbar panel for Elasticsearch",
     long_description=open("README.md").read(),
     author="Benoit Chabord",
