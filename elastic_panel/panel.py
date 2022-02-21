@@ -1,6 +1,5 @@
 import hashlib
 import json
-import traceback
 
 from debug_toolbar.panels import Panel
 from debug_toolbar.utils import ThreadCollector, get_stack, tidy_stacktrace, render_stacktrace, \
