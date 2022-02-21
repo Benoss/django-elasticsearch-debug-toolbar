@@ -1,12 +1,12 @@
-from django.conf import settings
-from django.template.loader import render_to_string
-from django.utils.translation import ugettext_lazy as _
+import hashlib
+import json
+import traceback
+
 from debug_toolbar.panels import Panel
 from debug_toolbar.utils import ThreadCollector, get_stack, tidy_stacktrace, render_stacktrace, \
     get_module_path, hidden_paths
-import hashlib
-import json
-
+from django.templatetags.static import static
+from django.utils.translation import gettext_lazy as _
 from elasticsearch.connection.base import Connection
 
 # Patching og the orginal elasticsearch log_request
@@ -66,20 +66,26 @@ class ElasticDebugPanel(Panel):
     nb_duplicates = 0
     nb_queries = 0
 
+    @property
     def nav_title(self):
         return _("Elastic Queries")
 
+    @property
     def nav_subtitle(self):
         default_str = "{} queries {:.2f}ms".format(self.nb_queries, self.total_time)
         if self.nb_duplicates > 0:
             default_str += " {} DUPE".format(self.nb_duplicates)
         return default_str
 
-    def url(self):
-        return ""
-
+    @property
     def title(self):
-        return self.nav_title()
+        return self.nav_title
+
+    @property
+    def scripts(self):
+        scripts = super().scripts
+        scripts.append(static("elastic_panel/js/elastic_panel.js"))
+        return scripts
 
     def process_request(self, request):
         collector.clear_collection()

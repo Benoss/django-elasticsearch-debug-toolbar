@@ -8,7 +8,8 @@ A Django Debug Toolbar panel for Elasticsearch
 About
 ------------
 
-Breaking changes: 
+Breaking changes:
+* django-elasticsearch-debug-toolbar 3.x is compatible with Django Debug Toolbar 3.x (elasticsearch <8.0.0)
 * django-elasticsearch-debug-toolbar 2.x is compatible with Django Debug Toolbar 2.x
 * django-elasticsearch-debug-toolbar 1.x is compatible with Django Debug Toolbar 1.x
 
@@ -31,7 +32,7 @@ or install the development version from source::
 
     pip install git+git@github.com:Benoss/django-elasticsearch-debug-toolbar.git
 
-* Then add ``elastic_panel`` to your ``INSTALLED_APPS`` so that we can find the templates in the panel. 
+* Then add ``elastic_panel`` to your ``INSTALLED_APPS`` so that we can find the templates in the panel.
 * Also, add ``'elastic_panel.panel.ElasticDebugPanel'`` to your ``DEBUG_TOOLBAR_PANELS``.
 
 Usage
@@ -48,4 +49,3 @@ Uses the `MIT` license.
 
 * Django Debug Toolbar: https://github.com/django-debug-toolbar/django-debug-toolbar
 * MIT: http://opensource.org/licenses/MIT
-
