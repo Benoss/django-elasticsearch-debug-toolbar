@@ -12,9 +12,11 @@ var uarr = String.fromCharCode(0x25b6),
 
 var showHandler = function(e) {
 
-    toggle(this.nextElementSibling)
+    if(this.nextElementSibling) {
+        toggle(this.nextElementSibling)
+    }
 
-    var arrow = document.querySelector('a.elasticShowTemplate .toggleArrow')
+    var arrow = this.children[0];
     arrow.textContent = arrow.textContent == uarr ? darr : uarr
 
     toggle(this.parentNode.nextElementSibling)

@@ -35,15 +35,15 @@
         <dd>
             <div class="djTemplateShowContextDiv">
                 <a class="elasticShowTemplate">
-                    <span class="toggleArrow">▶</span> Show Traceback
+                    <span class="toggleArrow">▶</span> Show Stacktrace
                 </a>
-                <a class="selectText" style="display: none;"> -&gt; (Select All Json for ctrl + c)</a>
             </div>
             <div class="djTemplateHideContextDiv" style="display: none;">
-                <code class="json_code" contenteditable="true" >{{record.traceback}}</code>
+                <pre class="djdt-stack">
+                    {{record.stacktrace}}
+                </pre>
             </div>
         </dd>
-        </dt>
     {% endfor %}
     </dl>
 {% else %}
