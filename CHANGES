@@ -1,3 +1,6 @@
+3.1.0
+* Add a stacktrace to the records to show where the searches were originated #13
+
 3.0.2
 * Just CI auto deploy fixes
 

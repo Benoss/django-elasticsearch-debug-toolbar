@@ -2,6 +2,8 @@ django-debug-toolbar>=3.0
 elasticsearch<8.0.0
 
 pytest
+pytest-env
+
 isort
 flake8
 flake8-print  # Forbid print statement in code use logging. instead

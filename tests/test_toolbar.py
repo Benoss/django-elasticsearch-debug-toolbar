@@ -1,18 +1,20 @@
 import unittest
 
-from django.conf import settings
+import django
 
-settings.configure()
+django.setup()
+
 
 from debug_toolbar.toolbar import DebugToolbar  # noqa: E402
 from django.http import HttpResponse  # noqa: E402
 from django.test import RequestFactory  # noqa: E402
+from django.test import TestCase
 from elasticsearch.connection import Connection  # noqa: E402
 
 from elastic_panel import panel  # noqa: E402
 
 
-class ImportTest(unittest.TestCase):
+class ImportTest(TestCase):
     def test_input(self):
         panel.ElasticQueryInfo("GET", "asdasd", "asdasd", "{}", 200, "adssad", 1)
         panel.ElasticQueryInfo("GET", "asdasd", "asdasd", "", 200, "adssad", 1)
@@ -21,7 +23,7 @@ class ImportTest(unittest.TestCase):
         panel.ElasticQueryInfo("GET", "asdasd", "asdasd", b"{'asddsa': 'asddasds'}", 200, "adssad", 1)
 
 
-class PanelTests(unittest.TestCase):
+class PanelTests(TestCase):
     def setUp(self):
         self.get_response = lambda request: HttpResponse()
         self.request = RequestFactory().get("/")
