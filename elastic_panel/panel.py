@@ -1,9 +1,9 @@
 import hashlib
 import json
+import threading
 
 from debug_toolbar.panels import Panel
 from debug_toolbar.utils import (
-    ThreadCollector,
     get_module_path,
     get_stack,
     hidden_paths,
@@ -14,7 +14,23 @@ from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 from elasticsearch.connection.base import Connection
 
-# Patching og the original elasticsearch log_request
+
+class ThreadCollector:
+    def __init__(self):
+        self.data = threading.local()
+        self.data.collection = []
+
+    def collect(self, item):
+        self.data.collection.append(item)
+
+    def get_collection(self):
+        return getattr(self.data, "collection", [])
+
+    def clear_collection(self):
+        self.data.collection = []
+
+
+# Patching of the original elasticsearch log_request
 old_log_request_success = Connection.log_request_success
 collector = ThreadCollector()
 
