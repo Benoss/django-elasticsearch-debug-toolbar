@@ -3,13 +3,7 @@ import json
 import threading
 
 from debug_toolbar.panels import Panel
-from debug_toolbar.utils import (
-    get_module_path,
-    get_stack,
-    hidden_paths,
-    render_stacktrace,
-    tidy_stacktrace,
-)
+from debug_toolbar.utils import get_stack, render_stacktrace, tidy_stacktrace
 from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 from elasticsearch.connection.base import Connection
@@ -50,9 +44,6 @@ def _pretty_json(data):
     except (ValueError, TypeError):
         # non-json data or a bulk request
         return data
-
-
-hidden_paths.append(get_module_path(__name__))
 
 
 class ElasticQueryInfo:
