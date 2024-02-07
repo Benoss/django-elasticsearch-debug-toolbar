@@ -1,20 +1,31 @@
 import hashlib
 import json
+import threading
 
 from debug_toolbar.panels import Panel
-from debug_toolbar.utils import (
-    ThreadCollector,
-    get_module_path,
-    get_stack,
-    hidden_paths,
-    render_stacktrace,
-    tidy_stacktrace,
-)
+from debug_toolbar.utils import get_stack, render_stacktrace, tidy_stacktrace
 from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 from elasticsearch.connection.base import Connection
 
-# Patching og the original elasticsearch log_request
+
+class ThreadCollector:
+    def __init__(self):
+        self.data = threading.local()
+        self.data.collection = []
+
+    def collect(self, item):
+        if hasattr(self.data, 'collection'):
+            self.data.collection.append(item)
+
+    def get_collection(self):
+        return getattr(self.data, "collection", [])
+
+    def clear_collection(self):
+        self.data.collection = []
+
+
+# Patching of the original elasticsearch log_request
 old_log_request_success = Connection.log_request_success
 collector = ThreadCollector()
 
@@ -34,9 +45,6 @@ def _pretty_json(data):
     except (ValueError, TypeError):
         # non-json data or a bulk request
         return data
-
-
-hidden_paths.append(get_module_path(__name__))
 
 
 class ElasticQueryInfo:
