@@ -106,6 +106,21 @@ class PanelTests(TestCase):
 
         self.assertEqual(self.panel.nav_subtitle, "3 queries 300.00ms 1 DUPE")
 
+    def test_content_toggles_use_native_details(self):
+        self._record_query()
+        self.panel.generate_stats(self.request, self.response)
+
+        content = self.panel.content
+        self.assertEqual(content.count("<details>"), 3)
+        self.assertIn("<summary>Show Json Body</summary>", content)
+        self.assertIn("<summary>Show Json Response</summary>", content)
+        self.assertIn("<summary>Show Stacktrace</summary>", content)
+
+    def test_content_without_queries_explains_itself(self):
+        self.panel.generate_stats(self.request, self.response)
+
+        self.assertIn("No Elastic queries were recorded", self.panel.content)
+
     def test_process_request_clears_leftover_records(self):
         self._record_query()
         self.panel.process_request(self.request)
