@@ -3,7 +3,7 @@ import json
 import threading
 
 from debug_toolbar.panels import Panel
-from debug_toolbar.utils import get_stack, render_stacktrace, tidy_stacktrace
+from debug_toolbar.utils import get_stack_trace, render_stacktrace
 from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 from elasticsearch.connection.base import Connection
@@ -64,7 +64,7 @@ class ElasticQueryInfo:
         self.hash = hashlib.md5(
             self.full_url.encode("ascii", "ignore") + self.body.encode("ascii", "ignore")
         ).hexdigest()
-        self.stacktrace = tidy_stacktrace(reversed(get_stack()))
+        self.stacktrace = get_stack_trace(skip=1)
 
 
 class ElasticDebugPanel(Panel):
