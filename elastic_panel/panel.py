@@ -15,7 +15,7 @@ class ThreadCollector:
         self.data.collection = []
 
     def collect(self, item):
-        if hasattr(self.data, 'collection'):
+        if hasattr(self.data, "collection"):
             self.data.collection.append(item)
 
     def get_collection(self):
