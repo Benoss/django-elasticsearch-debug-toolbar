@@ -1,5 +1,14 @@
 3.1.0
 * Add a stacktrace to the records to show where the searches were originated #13
+* Fix django-debug-toolbar >= 4.1 compatibility ('_thread._local' object has no attribute 'collection') #21
+* Replace pkg_resources with importlib.metadata; works in environments without setuptools #23 #18
+* Replace deprecated debug-toolbar get_stack()/tidy_stacktrace() with get_stack_trace() #25
+* Fix "Show Json Body" / "Show Json Response" / "Show Stacktrace" toggles, dead with lazily
+  loaded panel content in modern debug-toolbar; now native details/summary without JavaScript #28
+* Fix "DEBUG is set to False" being shown in the panel even when DEBUG is True #28
+* Test against currently supported versions: Django up to 6.1, debug-toolbar up to 7.1,
+  Python up to 3.14 #26; expand test coverage #27
+* Run tests on pull requests, split from PyPI publishing; modernize CI and pre-commit #24 #26
 
 3.0.2
 * Just CI auto deploy fixes
