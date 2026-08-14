@@ -1,4 +1,6 @@
+import importlib
 import unittest
+from unittest import mock
 
 import django
 
@@ -12,6 +14,21 @@ from django.test import TestCase
 from elasticsearch.connection import Connection  # noqa: E402
 
 from elastic_panel import panel  # noqa: E402
+
+
+class VersionTest(TestCase):
+    def test_version_comes_from_package_metadata(self):
+        import elastic_panel
+
+        self.assertNotEqual(elastic_panel.__version__, "unknown")
+
+    def test_version_falls_back_when_package_is_not_installed(self):
+        import elastic_panel
+
+        with mock.patch("importlib.metadata.version", side_effect=importlib.metadata.PackageNotFoundError):
+            self.assertEqual(importlib.reload(elastic_panel).__version__, "unknown")
+
+        self.assertNotEqual(importlib.reload(elastic_panel).__version__, "unknown")
 
 
 class ImportTest(TestCase):
@@ -105,6 +122,9 @@ class PanelTests(TestCase):
         self.panel.generate_stats(self.request, self.response)
 
         self.assertEqual(self.panel.nav_subtitle, "3 queries 300.00ms 1 DUPE")
+
+    def test_title(self):
+        self.assertEqual(str(self.panel.title), "Elastic Queries")
 
     def test_content_toggles_use_native_details(self):
         self._record_query()
