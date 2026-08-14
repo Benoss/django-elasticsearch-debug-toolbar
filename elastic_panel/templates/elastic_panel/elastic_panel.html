@@ -1,7 +1,5 @@
 {% load i18n %}
-{% load static %}
 
-{#<h4>{% trans 'Queries' %}</h4>#}
 {% if records %}
     <dl>
     {% for record in records %}
@@ -11,38 +9,22 @@
         <dd>time: {{record.duration}} ms</dd>
         <dd>full_url: {{record.full_url}}</dd>
         <dd>
-            <div class="djTemplateShowContextDiv">
-                <a class="elasticShowTemplate">
-                    <span class="toggleArrow">▶</span> Show Json Body
-                </a>
-                <a class="selectText" style="display: none;"> -&gt; (Select All Json for ctrl + c)</a>
-            </div>
-            <div class="djTemplateHideContextDiv" style="display: none;">
-                <code class="json_code" contenteditable="true" >{{record.body}}</code>
-            </div>
+            <details>
+                <summary>Show Json Body</summary>
+                <code class="json_code" contenteditable="true" style="display: block; white-space: pre-wrap;">{{record.body}}</code>
+            </details>
         </dd>
         <dd>
-            <div class="djTemplateShowContextDiv">
-                <a class="elasticShowTemplate">
-                    <span class="toggleArrow">▶</span> Show Json Response
-                </a>
-                <a class="selectText" style="display: none;"> -&gt; (Select All Json for ctrl + c)</a>
-            </div>
-            <div class="djTemplateHideContextDiv" style="display: none;">
-                <code class="json_code" contenteditable="true" >{{record.response}}</code>
-            </div>
+            <details>
+                <summary>Show Json Response</summary>
+                <code class="json_code" contenteditable="true" style="display: block; white-space: pre-wrap;">{{record.response}}</code>
+            </details>
         </dd>
         <dd>
-            <div class="djTemplateShowContextDiv">
-                <a class="elasticShowTemplate">
-                    <span class="toggleArrow">▶</span> Show Stacktrace
-                </a>
-            </div>
-            <div class="djTemplateHideContextDiv" style="display: none;">
-                <pre class="djdt-stack">
-                    {{record.stacktrace}}
-                </pre>
-            </div>
+            <details>
+                <summary>Show Stacktrace</summary>
+                <pre class="djdt-stack">{{record.stacktrace}}</pre>
+            </details>
         </dd>
     {% endfor %}
     </dl>

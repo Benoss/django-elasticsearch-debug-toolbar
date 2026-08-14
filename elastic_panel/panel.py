@@ -4,7 +4,7 @@ import threading
 
 from debug_toolbar.panels import Panel
 from debug_toolbar.utils import get_stack_trace, render_stacktrace
-from django.templatetags.static import static
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from elasticsearch.connection.base import Connection
 
@@ -94,12 +94,6 @@ class ElasticDebugPanel(Panel):
     def title(self):
         return self.nav_title
 
-    @property
-    def scripts(self):
-        scripts = super().scripts
-        scripts.append(static("elastic_panel/js/elastic_panel.js"))
-        return scripts
-
     def process_request(self, request):
         collector.clear_collection()
         return super().process_request(request)
@@ -120,4 +114,4 @@ class ElasticDebugPanel(Panel):
         self.nb_queries = len(records)
 
         collector.clear_collection()
-        self.record_stats({"records": records})
+        self.record_stats({"records": records, "debug": settings.DEBUG})
