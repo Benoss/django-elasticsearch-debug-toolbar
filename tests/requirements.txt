@@ -11,3 +11,4 @@ flake8-bugbear  # Catch common errors
 flake8-printf-formatting  #
 black>=22.1.0
 pre-commit
+pytest-cov
