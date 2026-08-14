@@ -23,23 +23,95 @@ class ImportTest(TestCase):
         panel.ElasticQueryInfo("GET", "asdasd", "asdasd", b"{'asddsa': 'asddasds'}", 200, "adssad", 1)
 
 
+class PrettyJsonTest(TestCase):
+    def test_valid_json_is_indented(self):
+        self.assertEqual(panel._pretty_json('{"a": 1}'), '{\n  "a": 1\n}')
+
+    def test_json_keys_are_sorted(self):
+        pretty = panel._pretty_json('{"b": 2, "a": 1}')
+        self.assertLess(pretty.index('"a"'), pretty.index('"b"'))
+
+    def test_invalid_json_is_returned_unchanged(self):
+        self.assertEqual(panel._pretty_json("not json"), "not json")
+
+    def test_none_is_returned_unchanged(self):
+        self.assertIsNone(panel._pretty_json(None))
+
+
+class QueryInfoTest(TestCase):
+    def _info(self, **overrides):
+        kwargs = {
+            "method": "GET",
+            "full_url": "http://es:9200/idx/_search",
+            "path": "/idx/_search",
+            "body": '{"query": {"match_all": {}}}',
+            "status_code": 200,
+            "response": '{"took": 1}',
+            "duration": 0.1234,
+        }
+        kwargs.update(overrides)
+        return panel.ElasticQueryInfo(**kwargs)
+
+    def test_duration_is_milliseconds(self):
+        self.assertEqual(self._info(duration=0.1234).duration, 123.4)
+
+    def test_same_url_and_body_share_hash(self):
+        self.assertEqual(self._info().hash, self._info().hash)
+
+    def test_different_body_changes_hash(self):
+        self.assertNotEqual(self._info().hash, self._info(body='{"query": {"ids": []}}').hash)
+
+    def test_bytes_body_is_decoded(self):
+        info = self._info(body=b'{"a": 1}')
+        self.assertIsInstance(info.body, str)
+
+
 class PanelTests(TestCase):
     def setUp(self):
         self.get_response = lambda request: HttpResponse()
         self.request = RequestFactory().get("/")
         self.toolbar = DebugToolbar(self.request, self.get_response)
         self.panel = panel.ElasticDebugPanel(self.toolbar, self.get_response)
+        self.response = self.panel.process_request(self.request)
+
+    def _record_query(self, body='{"query": {"match_all": {}}}'):
+        Connection().log_request_success(
+            "GET", "http://es:9200/idx/_search", "/idx/_search", body, 200, '{"took": 1}', 0.1
+        )
 
     def test_recording(self, *args):
-        response = self.panel.process_request(self.request)
-        Connection().log_request_success("GET", "asdasd", "asdasd", "{}", 200, "adssad", 1)
-        self.assertIsNotNone(response)
+        self._record_query()
+        self.assertIsNotNone(self.response)
 
-        self.panel.generate_stats(self.request, response)
+        self.panel.generate_stats(self.request, self.response)
         stats = self.panel.get_stats()
         self.assertIn("records", stats)
         self.assertEqual(len(stats["records"]), 1)
         self.assertIn("test_toolbar", stats["records"][0].stacktrace)
+
+    def test_content_renders_recorded_query(self):
+        self._record_query()
+        self.panel.generate_stats(self.request, self.response)
+
+        content = self.panel.content
+        self.assertIn("GET 200 /idx/_search", content)
+        self.assertIn("match_all", content)
+        self.assertIn("test_toolbar", content)
+
+    def test_nav_subtitle_counts_queries_and_duplicates(self):
+        self._record_query()
+        self._record_query()
+        self._record_query(body='{"query": {"ids": []}}')
+        self.panel.generate_stats(self.request, self.response)
+
+        self.assertEqual(self.panel.nav_subtitle, "3 queries 300.00ms 1 DUPE")
+
+    def test_process_request_clears_leftover_records(self):
+        self._record_query()
+        self.panel.process_request(self.request)
+        self.panel.generate_stats(self.request, self.response)
+
+        self.assertEqual(len(self.panel.get_stats()["records"]), 0)
 
 
 if __name__ == "__main__":
