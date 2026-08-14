@@ -9,11 +9,11 @@ elastic_panel
 
 """
 
-import pkg_resources
+import importlib.metadata
 
 try:
-    __version__ = pkg_resources.get_distribution("django-elasticsearch-debug-toolbar").version
-except Exception:
+    __version__ = importlib.metadata.version("django-elasticsearch-debug-toolbar")
+except importlib.metadata.PackageNotFoundError:
     __version__ = "unknown"
 
 
