@@ -39,6 +39,7 @@ class PanelTests(TestCase):
         stats = self.panel.get_stats()
         self.assertIn("records", stats)
         self.assertEqual(len(stats["records"]), 1)
+        self.assertIn("test_toolbar", stats["records"][0].stacktrace)
 
 
 if __name__ == "__main__":
