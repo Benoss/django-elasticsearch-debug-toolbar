@@ -23,7 +23,8 @@
         <dd>
             <details>
                 <summary>Show Stacktrace</summary>
-                <pre class="djdt-stack">{{record.stacktrace}}</pre>
+                {# pre-rendered escaped HTML from debug_toolbar.utils.render_stacktrace; safety is lost in stats serialization #}
+                <pre class="djdt-stack">{{record.stacktrace|safe}}</pre>
             </details>
         </dd>
     {% endfor %}

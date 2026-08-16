@@ -1,4 +1,5 @@
 import importlib
+import json
 import unittest
 from unittest import mock
 
@@ -104,7 +105,7 @@ class PanelTests(TestCase):
         stats = self.panel.get_stats()
         self.assertIn("records", stats)
         self.assertEqual(len(stats["records"]), 1)
-        self.assertIn("test_toolbar", stats["records"][0].stacktrace)
+        self.assertIn("test_toolbar", stats["records"][0]["stacktrace"])
 
     def test_content_renders_recorded_query(self):
         self._record_query()
@@ -122,6 +123,21 @@ class PanelTests(TestCase):
         self.panel.generate_stats(self.request, self.response)
 
         self.assertEqual(self.panel.nav_subtitle, "3 queries 300.00ms 1 DUPE")
+
+    def test_stats_survive_json_round_trip(self):
+        # Debug-toolbar >= 5 stores panel stats as JSON and renders panel
+        # content from the deserialized copy; anything json.dumps cannot
+        # handle is silently stringified and renders as empty fields.
+        self._record_query()
+        self.panel.generate_stats(self.request, self.response)
+
+        record = json.loads(json.dumps(self.panel.get_stats()))["records"][0]
+        self.assertEqual(record["method"], "GET")
+        self.assertEqual(record["path"], "/idx/_search")
+        self.assertEqual(record["status_code"], 200)
+        self.assertEqual(record["duration"], 100.0)
+        self.assertIn("match_all", record["body"])
+        self.assertIn("test_toolbar", record["stacktrace"])
 
     def test_title(self):
         self.assertEqual(str(self.panel.title), "Elastic Queries")

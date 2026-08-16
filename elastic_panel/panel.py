@@ -109,9 +109,28 @@ class ElasticDebugPanel(Panel):
             if record.hash in hashs:
                 self.nb_duplicates += 1
             hashs.add(record.hash)
-            record.stacktrace = render_stacktrace(record.stacktrace)
 
         self.nb_queries = len(records)
 
         collector.clear_collection()
-        self.record_stats({"records": records, "debug": settings.DEBUG})
+        # Debug-toolbar >= 5 serializes stats to JSON and renders panel
+        # content from the deserialized copy, so only plain data survives.
+        self.record_stats(
+            {
+                "records": [
+                    {
+                        "method": record.method,
+                        "full_url": record.full_url,
+                        "path": record.path,
+                        "status_code": record.status_code,
+                        "body": record.body,
+                        "response": record.response,
+                        "duration": record.duration,
+                        "hash": record.hash,
+                        "stacktrace": str(render_stacktrace(record.stacktrace)),
+                    }
+                    for record in records
+                ],
+                "debug": settings.DEBUG,
+            }
+        )
