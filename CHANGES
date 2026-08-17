@@ -8,6 +8,8 @@
 * Fix "DEBUG is set to False" being shown in the panel even when DEBUG is True #28
 * Fix empty records (no hash/time/url/body) with debug-toolbar >= 5: panel stats are now
   JSON-serializable, surviving the toolbar's serialized stats store #31
+* Fix memory leak (#7): queries are now collected only between the panel's request start and
+  stats generation, instead of accumulating in every thread that once served a toolbar request #32
 * Test against currently supported versions: Django up to 6.1, debug-toolbar up to 7.1,
   Python up to 3.14 #26; expand test coverage #27
 * Run tests on pull requests, split from PyPI publishing; modernize CI and pre-commit #24 #26

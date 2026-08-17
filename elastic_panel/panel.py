@@ -10,19 +10,29 @@ from elasticsearch.connection.base import Connection
 
 
 class ThreadCollector:
+    """Collects queries only between enable and disable, per thread.
+
+    log_request_success is patched process-wide, so without the enabled
+    window every Elasticsearch query in any thread that once served a
+    toolbar request would accumulate forever (issue #7).
+    """
+
     def __init__(self):
         self.data = threading.local()
-        self.data.collection = []
 
     def collect(self, item):
-        if hasattr(self.data, "collection"):
-            self.data.collection.append(item)
+        collection = getattr(self.data, "collection", None)
+        if collection is not None:
+            collection.append(item)
 
     def get_collection(self):
-        return getattr(self.data, "collection", [])
+        return getattr(self.data, "collection", None) or []
 
-    def clear_collection(self):
+    def enable_collection(self):
         self.data.collection = []
+
+    def disable_collection(self):
+        self.data.collection = None
 
 
 # Patching of the original elasticsearch log_request
@@ -95,7 +105,7 @@ class ElasticDebugPanel(Panel):
         return self.nav_title
 
     def process_request(self, request):
-        collector.clear_collection()
+        collector.enable_collection()
         return super().process_request(request)
 
     def generate_stats(self, request, response):
@@ -112,7 +122,7 @@ class ElasticDebugPanel(Panel):
 
         self.nb_queries = len(records)
 
-        collector.clear_collection()
+        collector.disable_collection()
         # Debug-toolbar >= 5 serializes stats to JSON and renders panel
         # content from the deserialized copy, so only plain data survives.
         self.record_stats(
