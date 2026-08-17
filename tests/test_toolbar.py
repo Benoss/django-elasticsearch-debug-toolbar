@@ -157,6 +157,16 @@ class PanelTests(TestCase):
 
         self.assertIn("No Elastic queries were recorded", self.panel.content)
 
+    def test_queries_outside_a_panel_cycle_do_not_accumulate(self):
+        # Once a pooled worker thread has served one toolbar-enabled request,
+        # queries from later non-toolbar requests on the same thread must not
+        # pile up in the thread-local collection (issue #7).
+        self._record_query()
+        self.panel.generate_stats(self.request, self.response)
+
+        self._record_query()
+        self.assertEqual(panel.collector.get_collection(), [])
+
     def test_process_request_clears_leftover_records(self):
         self._record_query()
         self.panel.process_request(self.request)
