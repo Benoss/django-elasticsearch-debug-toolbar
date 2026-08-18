@@ -1,3 +1,40 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-elasticsearch-debug-toolbar"
+version = "3.1.0"
+description = "A Django Debug Toolbar panel for Elasticsearch"
+readme = "README.md"
+license = "MIT"
+authors = [{name = "Benoit Chabord", email = "benauf@gmail.com"}]
+keywords = ["django", "es", "elastic", "elasticsearch"]
+requires-python = ">=3.8"
+classifiers = [
+    "Framework :: Django",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+[project.urls]
+Homepage = "https://github.com/Benoss/django-elasticsearch-debug-toolbar"
+Changelog = "https://github.com/Benoss/django-elasticsearch-debug-toolbar/blob/master/CHANGES"
+
+[tool.setuptools.packages.find]
+include = ["elastic_panel*"]
+
+[tool.pytest.ini_options]
+env = ["DJANGO_SETTINGS_MODULE=tests.settings"]
+
 [tool.black]
 line-length = 120
 target-version=["py39", ]
