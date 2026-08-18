@@ -95,9 +95,9 @@ class ElasticDebugPanel(Panel):
 
     @property
     def nav_subtitle(self):
-        default_str = "{} queries {:.2f}ms".format(self.nb_queries, self.total_time)
+        default_str = f"{self.nb_queries} queries {self.total_time:.2f}ms"
         if self.nb_duplicates > 0:
-            default_str += " {} DUPE".format(self.nb_duplicates)
+            default_str += f" {self.nb_duplicates} DUPE"
         return default_str
 
     @property

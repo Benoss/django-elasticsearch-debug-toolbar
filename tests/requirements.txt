@@ -4,11 +4,6 @@ elasticsearch<8.0.0
 pytest
 pytest-env
 
-isort
-flake8
-flake8-print  # Forbid print statement in code use logging. instead
-flake8-bugbear  # Catch common errors
-flake8-printf-formatting  #
-black>=22.1.0
+ruff
 pre-commit
 pytest-cov
