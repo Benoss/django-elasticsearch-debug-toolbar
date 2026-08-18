@@ -40,6 +40,15 @@ jobs:
           - django-version: "6.1.0"
             python-version: "3.14"
             ddt-version: "7.1.0"
+          # elasticsearch >= 8 (default from tests/requirements.txt is 7.x)
+          - django-version: "5.2.0"
+            python-version: "3.12"
+            ddt-version: "7.1.0"
+            es-version: "~=8.0"
+          - django-version: "6.1.0"
+            python-version: "3.14"
+            ddt-version: "7.1.0"
+            es-version: "~=9.0"
     steps:
     - uses: actions/checkout@v5
     - name: Set up Python ${{ matrix.python-version }}
@@ -61,6 +70,10 @@ jobs:
       run: |
         python -m pip install "Django~=${{ matrix.django-version }}"
         python -m pip install "django-debug-toolbar~=${{ matrix.ddt-version }}"
+
+    - name: Upgrade elasticsearch version
+      if: matrix.es-version
+      run: python -m pip install "elasticsearch${{ matrix.es-version }}"
 
     - name: Run pre-commit
       run: pre-commit run --all-files

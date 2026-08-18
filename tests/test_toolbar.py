@@ -8,15 +8,38 @@ import django
 django.setup()
 
 
-from debug_toolbar.toolbar import DebugToolbar  # noqa: E402
-from django.http import HttpResponse  # noqa: E402
+import elasticsearch
+from debug_toolbar.toolbar import DebugToolbar
+from django.http import HttpResponse
 from django.test import (
-    RequestFactory,  # noqa: E402
+    RequestFactory,
     TestCase,
 )
-from elasticsearch.connection import Connection  # noqa: E402
 
-from elastic_panel import panel  # noqa: E402
+from elastic_panel import panel
+
+ES8 = elasticsearch.VERSION >= (8,)
+if not ES8:
+    from elasticsearch.connection import Connection
+
+
+class FakeNode:
+    scheme = "http"
+    host = "es"
+    port = 9200
+
+
+class FakeMeta:
+    def __init__(self, status, duration):
+        self.node = FakeNode()
+        self.status = status
+        self.duration = duration
+
+
+class FakeResponse:
+    def __init__(self, body, status=200, duration=0.1):
+        self.meta = FakeMeta(status, duration)
+        self.body = body
 
 
 class VersionTest(TestCase):
@@ -56,6 +79,15 @@ class PrettyJsonTest(TestCase):
 
     def test_none_is_returned_unchanged(self):
         self.assertIsNone(panel._pretty_json(None))
+
+    def test_es8_objects_are_pretty_printed(self):
+        self.assertEqual(panel._pretty_json({"b": 2, "a": 1}), '{\n  "a": 1,\n  "b": 2\n}')
+
+    def test_es8_bytes_inside_objects_are_decoded(self):
+        self.assertEqual(panel._pretty_json({"raw": b"data"}), '{\n  "raw": "data"\n}')
+
+    def test_unserializable_objects_fall_back_to_str(self):
+        self.assertEqual(panel._pretty_json({"obj": object}), str({"obj": object}))
 
     def test_apostrophes_are_not_mangled(self):
         self.assertEqual(panel._pretty_json('{"name": "it\'s"}'), '{\n  "name": "it\'s"\n}')
@@ -98,9 +130,13 @@ class PanelTests(TestCase):
         self.response = self.panel.process_request(self.request)
 
     def _record_query(self, body='{"query": {"match_all": {}}}'):
-        Connection().log_request_success(
-            "GET", "http://es:9200/idx/_search", "/idx/_search", body, 200, '{"took": 1}', 0.1
-        )
+        if ES8:
+            with mock.patch.object(panel, "old_perform_request", return_value=FakeResponse({"took": 1})):
+                panel.patched_perform_request(None, "GET", "/idx/_search", body=json.loads(body))
+        else:
+            Connection().log_request_success(
+                "GET", "http://es:9200/idx/_search", "/idx/_search", body, 200, '{"took": 1}', 0.1
+            )
 
     def test_recording(self, *args):
         self._record_query()
@@ -171,6 +207,28 @@ class PanelTests(TestCase):
 
         self._record_query()
         self.assertEqual(panel.collector.get_collection(), [])
+
+    def test_es7_wrapper_records_and_forwards(self):
+        with mock.patch.object(panel, "old_log_request_success") as old:
+            panel.patched_log_request_success(None, "GET", "http://es:9200/i", "/i", "{}", 200, "{}", 0.2)
+
+        old.assert_called_once_with(None, "GET", "http://es:9200/i", "/i", "{}", 200, "{}", 0.2)
+        record = panel.collector.get_collection()[-1]
+        self.assertEqual(record.full_url, "http://es:9200/i")
+        self.assertEqual(record.duration, 200.0)
+
+    def test_es8_wrapper_records_and_returns_response(self):
+        fake = FakeResponse({"took": 3}, status=201, duration=0.3)
+        with mock.patch.object(panel, "old_perform_request", return_value=fake) as old:
+            result = panel.patched_perform_request(None, "POST", "/i/_bulk", body=b'{"a": 1}\n', headers={})
+
+        self.assertIs(result, fake)
+        old.assert_called_once_with(None, "POST", "/i/_bulk", body=b'{"a": 1}\n', headers={})
+        record = panel.collector.get_collection()[-1]
+        self.assertEqual(record.full_url, "http://es:9200/i/_bulk")
+        self.assertEqual(record.status_code, 201)
+        self.assertEqual(record.duration, 300.0)
+        self.assertIn("took", record.response)
 
     def test_process_request_clears_leftover_records(self):
         self._record_query()

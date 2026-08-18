@@ -2,11 +2,11 @@ import hashlib
 import json
 import threading
 
+import elasticsearch
 from debug_toolbar.panels import Panel
 from debug_toolbar.utils import get_stack_trace, render_stacktrace
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from elasticsearch.connection.base import Connection
 
 
 class ThreadCollector:
@@ -35,21 +35,79 @@ class ThreadCollector:
         self.data.collection = None
 
 
-# Patching of the original elasticsearch log_request
-old_log_request_success = Connection.log_request_success
 collector = ThreadCollector()
+
+# Filled by the matching _install_*_hook() below; module-level so tests can
+# exercise both wrappers regardless of the installed client version.
+old_log_request_success = None
+old_perform_request = None
 
 
 def patched_log_request_success(self, method, full_url, path, body, status_code, response, duration):
+    """Hook for elasticsearch < 8: Connection.log_request_success."""
     collector.collect(ElasticQueryInfo(method, full_url, path, body, status_code, response, duration))
     old_log_request_success(self, method, full_url, path, body, status_code, response, duration)
 
 
-Connection.log_request_success = patched_log_request_success
+def patched_perform_request(self, method, target, **kwargs):
+    """Hook for elasticsearch >= 8: elastic_transport.Transport.perform_request.
+
+    The pre-8 logging hooks are gone; the transport call itself is the
+    interception point, and body/response arrive as Python objects.
+    """
+    response = old_perform_request(self, method, target, **kwargs)
+    node = response.meta.node
+    collector.collect(
+        ElasticQueryInfo(
+            method,
+            f"{node.scheme}://{node.host}:{node.port}{target}",
+            target,
+            kwargs.get("body"),
+            response.meta.status,
+            response.body,
+            response.meta.duration,
+        )
+    )
+    return response
+
+
+def _install_es7_hook():  # pragma: no cover - runs only with elasticsearch < 8 installed
+    from elasticsearch.connection.base import Connection
+
+    global old_log_request_success
+    old_log_request_success = Connection.log_request_success
+    Connection.log_request_success = patched_log_request_success
+
+
+def _install_es8_hook():  # pragma: no cover - runs only with elasticsearch >= 8 installed
+    from elastic_transport import Transport
+
+    global old_perform_request
+    old_perform_request = Transport.perform_request
+    Transport.perform_request = patched_perform_request
+
+
+if elasticsearch.VERSION >= (8,):  # pragma: no cover - branch follows the installed client
+    _install_es8_hook()
+else:  # pragma: no cover - branch follows the installed client
+    _install_es7_hook()
+
+
+def _bytes_to_text(value):
+    if isinstance(value, bytes):
+        return value.decode("utf-8", "ignore")
+    raise TypeError(f"not JSON serializable: {type(value)}")
 
 
 def _pretty_json(data):
     # pretty JSON in tracer curl logs
+    if not isinstance(data, (str, bytes, type(None))):
+        # elasticsearch >= 8 hands the transport deserialized objects,
+        # which may still contain raw bytes (bulk payloads)
+        try:
+            return json.dumps(data, sort_keys=True, indent=2, separators=(",", ": "), default=_bytes_to_text)
+        except (ValueError, TypeError):
+            return str(data)
     try:
         return json.dumps(json.loads(data), sort_keys=True, indent=2, separators=(",", ": "))
     except (ValueError, TypeError):
