@@ -10,8 +10,10 @@ django.setup()
 
 from debug_toolbar.toolbar import DebugToolbar  # noqa: E402
 from django.http import HttpResponse  # noqa: E402
-from django.test import RequestFactory  # noqa: E402
-from django.test import TestCase
+from django.test import (
+    RequestFactory,  # noqa: E402
+    TestCase,
+)
 from elasticsearch.connection import Connection  # noqa: E402
 
 from elastic_panel import panel  # noqa: E402

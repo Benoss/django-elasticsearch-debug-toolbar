@@ -1,5 +1,5 @@
 repos:
-    # github will run `pre-commit run --hook-stage manual -a` and then manually black and flake8
+    # CI runs `pre-commit run --all-files` (see .github/workflows/tests.yml)
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
@@ -13,21 +13,15 @@ repos:
         stages: [pre-commit, pre-push, manual]
 -   repo: local
     hooks:
-    -   id: isort
-        name: isort
-        entry: isort --profile black
+    -   id: ruff-check
+        name: ruff check
+        entry: ruff check --fix
         language: system
         types: [python]
         stages: [pre-commit, pre-push, manual]
-    -   id: black
-        name: black
-        entry: black
-        language: system
-        types: [python]
-        stages: [pre-commit, pre-push, manual]
-    -   id: flake8
-        name: flake8
-        entry: flake8
+    -   id: ruff-format
+        name: ruff format
+        entry: ruff format
         language: system
         types: [python]
         stages: [pre-commit, pre-push, manual]

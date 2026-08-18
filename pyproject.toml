@@ -35,31 +35,11 @@ include = ["elastic_panel*"]
 [tool.pytest.ini_options]
 env = ["DJANGO_SETTINGS_MODULE=tests.settings"]
 
-[tool.black]
+[tool.ruff]
 line-length = 120
-target-version=["py39", ]
-include = '\.pyi?$'
-# see help text for default exclude
-exclude = '''/(
-    # black defaults from --help (see also https://github.com/ambv/black#configuration-format )
-      \.git
-    | \.hg
-    | \.mypy_cache
-    | \.nox
-    | \.tox
-    | \.venv
-    | _build
-    | buck-out
-    | build
-    | dist
 
-    # common exclusions
-    | node_modules
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "C4", "T20", "UP"]
 
-    # django specific exclusions
-
-    | migrations
-
-    # project specific exclusions
-)/
-'''
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["E402"]
