@@ -51,7 +51,7 @@ Connection.log_request_success = patched_log_request_success
 def _pretty_json(data):
     # pretty JSON in tracer curl logs
     try:
-        return json.dumps(json.loads(data), sort_keys=True, indent=2, separators=(",", ": ")).replace("'", r"\u0027")
+        return json.dumps(json.loads(data), sort_keys=True, indent=2, separators=(",", ": "))
     except (ValueError, TypeError):
         # non-json data or a bulk request
         return data

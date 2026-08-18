@@ -1,7 +1,3 @@
-import os
-
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-
 INSTALLED_APPS = ["debug_toolbar", "elastic_panel"]
 
 DEBUG_TOOLBAR_PANELS = [
@@ -20,7 +16,6 @@ DATABASES = {
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR + "/tests/templates"],
         "APP_DIRS": True,
     },
 ]

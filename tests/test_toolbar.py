@@ -55,6 +55,9 @@ class PrettyJsonTest(TestCase):
     def test_none_is_returned_unchanged(self):
         self.assertIsNone(panel._pretty_json(None))
 
+    def test_apostrophes_are_not_mangled(self):
+        self.assertEqual(panel._pretty_json('{"name": "it\'s"}'), '{\n  "name": "it\'s"\n}')
+
 
 class QueryInfoTest(TestCase):
     def _info(self, **overrides):
