@@ -10,6 +10,8 @@
   JSON-serializable, surviving the toolbar's serialized stats store #31
 * Fix apostrophes rendering as literal \u0027 in the JSON body/response display, a leftover
   from embedding JSON into inline JavaScript #34
+* Support elasticsearch 8.x and 9.x by hooking elastic_transport instead of the removed
+  Connection.log_request_success (#19); elasticsearch 7.x keeps its original hook #37
 * Fix memory leak (#7): queries are now collected only between the panel's request start and
   stats generation, instead of accumulating in every thread that once served a toolbar request #32
 * Test against currently supported versions: Django up to 6.1, debug-toolbar up to 7.1,

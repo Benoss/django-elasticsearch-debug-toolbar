@@ -9,12 +9,10 @@ About
 ------------
 
 Supported versions (tested in CI):
-* django-elasticsearch-debug-toolbar 3.1+: Django 2.2 to 6.x, Django Debug Toolbar 3.8 to 7.x, Python 3.9 to 3.14, elasticsearch <8.0.0
+* django-elasticsearch-debug-toolbar 3.1+: Django 2.2 to 6.x, Django Debug Toolbar 3.8 to 7.x, Python 3.9 to 3.14, elasticsearch 7.x, 8.x and 9.x
 * django-elasticsearch-debug-toolbar 3.0: Django Debug Toolbar 3.x (elasticsearch <8.0.0)
 * django-elasticsearch-debug-toolbar 2.x: Django Debug Toolbar 2.x
 * django-elasticsearch-debug-toolbar 1.x: Django Debug Toolbar 1.x
-
-elasticsearch-py 8.x is not supported yet (see issue #19) - contributions welcome.
 
 ElasticSearch queries using [elasticsearch python](https://github.com/elasticsearch/elasticsearch-py) official client.
 
