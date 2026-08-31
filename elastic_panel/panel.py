@@ -105,7 +105,7 @@ def _pretty_json(data):
         # elasticsearch >= 8 hands the transport deserialized objects,
         # which may still contain raw bytes (bulk payloads)
         try:
-            return json.dumps(data, sort_keys=True, indent=2, separators=(",", ": "), default=_bytes_to_text)
+            return json.dumps(data, sort_keys=True, indent=2, default=_bytes_to_text)
         except (ValueError, TypeError):
             return str(data)
     try:
